@@ -54,13 +54,12 @@ namespace logmodlist
             lobby.SetData("ModListHash", DictionaryHashGenerator.GenerateHash(Chainloader.PluginInfos));
             logmodlist.Log.LogInfo($"Setting lobby ModHashList to {startPatch.generatedHash}");
         }
-
-
     }
 
     [HarmonyPatch(typeof(GameNetworkManager))]
     public class LobbyJoinPatch
     {
+
         [HarmonyPatch("StartClient")]
         [HarmonyPostfix]
         static void Postfix(SteamId id)
@@ -70,7 +69,7 @@ namespace logmodlist
             var lobbyModList = GameNetworkManager.Instance.currentLobby?.GetData("ModListHash");
             if (lobbyModList == null)
             {
-                logmodlist.Log.LogInfo("Host does not have a modlist hash.");
+                logmodlist.Log.LogWarning("Host does not have a modlist hash.");
                 return;
             }
             else
