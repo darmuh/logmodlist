@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
+using BepInEx.Configuration;
 using HarmonyLib;
 using System;
 using System.Reflection;
@@ -28,6 +29,7 @@ namespace logmodlist
             logmodlist.instance = this;
             logmodlist.Log = base.Logger;
             logmodlist.Log.LogInfo((object)"logmodlist loaded...");
+            ConfigManager.Init(Config);
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         }
 

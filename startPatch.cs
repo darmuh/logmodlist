@@ -8,9 +8,29 @@ using System.Text;
 using System.Linq;
 using Steamworks;
 using Steamworks.Data;
+using BepInEx.Configuration;
 
 namespace logmodlist
 {
+
+    public class ConfigManager
+    {
+        public static ConfigManager Instance { get; private set; }
+
+        public static void Init(ConfigFile config)
+        {
+            Instance = new ConfigManager(config);
+        }
+
+        public static ConfigEntry<string> ExpectedModListHash { get; private set; }
+
+        private ConfigManager(ConfigFile config)
+        {
+            ExpectedModListHash = config.Bind("General", "ExpectedModListHash", "", "The expected modlist hash for this modpack. Do not change this unless you know what you're doing.");
+        }
+
+    }
+
     [HarmonyPatch(typeof(GameNetworkManager))]
     public class startPatch : MonoBehaviour
     {
@@ -28,8 +48,28 @@ namespace logmodlist
             logmodlist.Log.LogInfo("\t==========================");
             logmodlist.Log.LogInfo("\t");
             logmodlist.Log.LogInfo($"Modlist Hash: {generatedHash}");
-            logmodlist.Log.LogInfo("\t");
-            logmodlist.Log.LogInfo("\t==========================");
+
+            if (ConfigManager.ExpectedModListHash.Value != "")
+            {
+                logmodlist.Log.LogInfo($"Expected Hash (from modpack): {ConfigManager.ExpectedModListHash.Value}");
+
+                if (generatedHash == ConfigManager.ExpectedModListHash.Value)
+                {
+                    logmodlist.Log.LogWarning("Your modlist matches the expected modlist hash.");
+                }
+                else
+                {
+                    logmodlist.Log.LogError("Your modlist does not match the expected modlist hash.");
+                    logmodlist.Log.LogWarning("You may experience issues.");
+                }
+            }
+            else
+            {
+                logmodlist.Log.LogWarning("No expected hash found");
+            }
+
+            logmodlist.Log.LogInfo("==========================");
+
             // Log dictionary contents
             logmodlist.Log.LogInfo("[Modlist Contents]");
             logmodlist.Log.LogInfo("Mod GUID: Mod Version");
