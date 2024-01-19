@@ -45,8 +45,7 @@ namespace logmodlist
             PluginsLoaded = Chainloader.PluginInfos;
             generatedHash = DictionaryHashGenerator.GenerateHash(PluginsLoaded);
 
-            logmodlist.Log.LogInfo("\t==========================");
-            logmodlist.Log.LogInfo("\t");
+            logmodlist.Log.LogInfo("==========================");
             logmodlist.Log.LogInfo($"Modlist Hash: {generatedHash}");
 
             if (ConfigManager.ExpectedModListHash.Value != "")
@@ -78,6 +77,8 @@ namespace logmodlist
             {
                 logmodlist.Log.LogInfo($"{entry.Key}: {entry.Value}");
             }
+
+            logmodlist.Log.LogInfo("==========================");
         }
     }
 
