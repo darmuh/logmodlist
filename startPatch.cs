@@ -9,19 +9,23 @@ using System.Linq;
 
 namespace logmodlist
 {
-    [HarmonyPatch(typeof(GameNetworkManager), "Awake")]
+    [HarmonyPatch(typeof(GameNetworkManager))]
     public class startPatch : MonoBehaviour
     {
         private static Dictionary<string, PluginInfo> PluginsLoaded = new Dictionary<string, PluginInfo>();
+        public static string generatedHash = "";
 
+        [HarmonyPatch("Awake")]
+        [HarmonyPostfix]
         static void Postfix()
         {
             logmodlist.Log.LogInfo("Creating Modlist Hash.");
             PluginsLoaded = Chainloader.PluginInfos;
-            string ModListHash = DictionaryHashGenerator.GenerateHash(PluginsLoaded);
+            generatedHash = DictionaryHashGenerator.GenerateHash(PluginsLoaded);
+
             logmodlist.Log.LogInfo("\t==========================");
             logmodlist.Log.LogInfo("\t");
-            logmodlist.Log.LogInfo($"Modlist Hash: {ModListHash}");
+            logmodlist.Log.LogInfo($"Modlist Hash: {generatedHash}");
             logmodlist.Log.LogInfo("\t");
             logmodlist.Log.LogInfo("\t==========================");
             // Log dictionary contents
