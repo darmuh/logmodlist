@@ -6,6 +6,8 @@ using BepInEx.Bootstrap;
 using System.Security.Cryptography;
 using System.Text;
 using System.Linq;
+using Steamworks;
+using Steamworks.Data;
 
 namespace logmodlist
 {
@@ -36,6 +38,57 @@ namespace logmodlist
             {
                 logmodlist.Log.LogInfo($"{entry.Key}: {entry.Value}");
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(GameNetworkManager))]
+    public class LobbyCreatedPatch
+    {
+
+        [HarmonyPatch("SteamMatchmaking_OnLobbyCreated")]
+        [HarmonyPostfix]
+        static void Postfix(Result result, ref Lobby lobby)
+        {
+            if (result != Result.OK) return;
+
+            lobby.SetData("ModListHash", DictionaryHashGenerator.GenerateHash(Chainloader.PluginInfos));
+            logmodlist.Log.LogInfo($"Setting lobby ModHashList to {startPatch.generatedHash}");
+        }
+
+
+    }
+
+    [HarmonyPatch(typeof(GameNetworkManager))]
+    public class LobbyJoinPatch
+    {
+        [HarmonyPatch("StartClient")]
+        [HarmonyPostfix]
+        static void Postfix(SteamId id)
+        {
+            logmodlist.Log.LogInfo("Comparing your modlist with the host's modlist.");
+
+            var lobbyModList = GameNetworkManager.Instance.currentLobby?.GetData("ModListHash");
+            if (lobbyModList == null)
+            {
+                logmodlist.Log.LogInfo("Host does not have a modlist hash.");
+                return;
+            }
+            else
+            {
+                logmodlist.Log.LogInfo($"Host's modlist hash: {lobbyModList}");
+                logmodlist.Log.LogInfo($"Your modlist hash: {startPatch.generatedHash}");
+
+                if (lobbyModList == startPatch.generatedHash)
+                {
+                    logmodlist.Log.LogInfo("Your modlist matches the host's modlist.");
+                }
+                else
+                {
+                    logmodlist.Log.LogWarning("Your modlist does not match the host's modlist.");
+                    logmodlist.Log.LogWarning("You may experience issues.");
+                }
+            }
+
         }
     }
 
