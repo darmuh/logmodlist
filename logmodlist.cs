@@ -10,14 +10,16 @@ using UnityEngine;
 
 namespace logmodlist
 {
-    [BepInPlugin("darmuh.logmodlist", "logmodlist", "1.0.0")]
+    [BepInPlugin("TeamMLC.logmodlist", "logmodlist", "1.0.0")] //rename from logmodlist to "ModlistHashChecker" ??
 
     public class logmodlist : BaseUnityPlugin
     {
         public static logmodlist instance;
+        public bool hashMismatch = false;
+        public bool clientMismatch = false;
         public static class PluginInfo
         {
-            public const string PLUGIN_GUID = "darmuh.logmodlist";
+            public const string PLUGIN_GUID = "TeamMLC.logmodlist";
             public const string PLUGIN_NAME = "logmodlist";
             public const string PLUGIN_VERSION = "1.0.0";
         }
