@@ -56,7 +56,7 @@ namespace logmodlist
     public class startPatch : MonoBehaviour
     {
         private static Dictionary<string, PluginInfo> PluginsLoaded = new Dictionary<string, PluginInfo>();
-        public static string generatedHash = "";
+        public static string generatedHash { get; internal set; } = "";
 
         [HarmonyPatch("Awake")]
         [HarmonyPostfix]
