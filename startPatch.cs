@@ -23,6 +23,7 @@ namespace logmodlist
     public class ConfigManager
     {
         public static ConfigManager Instance { get; private set; }
+        public static ConfigFile config { get; private set; }
 
         public static void Init(ConfigFile config)
         {
@@ -30,6 +31,7 @@ namespace logmodlist
         }
 
         public static ConfigEntry<string> ExpectedModListHash { get; private set; }
+        public static ConfigEntry<bool> AutosetModListHash { get; private set; }
         public static ConfigEntry<bool> MenuWarning { get; private set; }
         public static ConfigEntry<bool> JoinWarning { get; private set; }
         public static ConfigEntry<string> WarningMessageText { get; private set; }
@@ -38,9 +40,11 @@ namespace logmodlist
         public static ConfigEntry<string> WarningButtonIgnoreText { get; private set; }
         public static ConfigEntry<string> WarningButtonResetText { get; private set; }
 
-        private ConfigManager(ConfigFile config)
+        private ConfigManager(ConfigFile loadconfig)
         {
+            config = loadconfig;
             ExpectedModListHash = config.Bind("General", "ExpectedModListHash", "", "The expected modlist hash for this modpack. Do not change this unless you know what you're doing.");
+            AutosetModListHash = config.Bind("General", "AutosetModListHash", false, "If true, override the current expected hash to the current one. Do not change this unless you know what you're doing.");
             MenuWarning = config.Bind("General", "MenuWarning", true, "Enable or Disable displaying a warning message in the menus when the hash does not match the expected hash.");
             JoinWarning = config.Bind("General", "JoinWarning", true, "Enable or Disable displaying a warning message when a client joins and the hash does not match the host hash.");
             JoinWarningText = config.Bind("Join Warning", "JoinWarningText", "Your modlist does not match the expected modlist hash.\n\n You may experience issues.", "Message to display in Hash Mismatch Menu Warning Message");
@@ -68,6 +72,13 @@ namespace logmodlist
 
             logmodlist.Log.LogInfo("==========================");
             logmodlist.Log.LogInfo($"Modlist Hash: {generatedHash}");
+            
+            if (ConfigManager.AutosetModListHash.Value)
+            {
+                logmodlist.Log.LogInfo("Overriding expected hash to the current hash");
+                ConfigManager.ExpectedModListHash.Value = generatedHash;
+                ConfigManager.config.Save();
+            }
 
             if (ConfigManager.ExpectedModListHash.Value != "")
             {
@@ -126,7 +137,7 @@ namespace logmodlist
         {
             if (logmodlist.instance.hashMismatch && ConfigManager.MenuWarning.Value)
             {
-                if(__instance != null && __instance.menuNotification != null)
+                if (__instance != null && __instance.menuNotification != null)
                 {
                     // cloning the one button from notification
                     Button setNewHash = Instantiate(__instance.menuNotification.GetComponentInChildren<Button>());
@@ -203,7 +214,7 @@ namespace logmodlist
     }
 
 
-        [HarmonyPatch(typeof(GameNetworkManager))]
+    [HarmonyPatch(typeof(GameNetworkManager))]
     public class LobbyJoinPatch
     {
 
