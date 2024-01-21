@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace logmodlist
 {
-    [BepInPlugin("TeamMLC.logmodlist", "logmodlist", "1.0.0")] //rename from logmodlist to "ModlistHashChecker" ??
+    [BepInPlugin("TeamMLC.logmodlist", "logmodlist", "0.1.1")] //rename from logmodlist to "ModlistHashChecker" ??
 
     public class logmodlist : BaseUnityPlugin
     {
