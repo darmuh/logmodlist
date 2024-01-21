@@ -1,0 +1,9 @@
+{
+    "name": "ModlistHashChecker",
+    "author": "TeamMLC",
+    "version_number": "0.1.0",
+    "description": "Check if your mods are the same version as host / the modpack you're using.",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100"
+    ]
+}
