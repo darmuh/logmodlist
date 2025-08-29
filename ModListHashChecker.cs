@@ -1,38 +1,33 @@
 ﻿using BepInEx;
-using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using BepInEx.Configuration;
 using HarmonyLib;
-using System;
 using System.Reflection;
-using Unity.Netcode;
-using UnityEngine;
 
 namespace ModListHashChecker
 {
-    [BepInPlugin("TeamMLC.ModlistHashChecker", "ModlistHashChecker", "0.1.2")]
+    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 
     public class ModListHashChecker : BaseUnityPlugin
     {
-        public static ModListHashChecker instance;
-        public bool noHashFound = false;
-        public bool hashMismatch = false;
-        public bool clientMismatch = false;
+        public static ModListHashChecker instance = null!;
+        public bool NoHashFound { get; internal set; } = false;
+        public bool HashMismatch { get; internal set; } = false;
+        public bool ClientMismatch { get; internal set; } = false;
         public static class PluginInfo
         {
             public const string PLUGIN_GUID = "TeamMLC.ModlistHashChecker";
             public const string PLUGIN_NAME = "ModlistHashChecker";
-            public const string PLUGIN_VERSION = "0.1.2";
+            public const string PLUGIN_VERSION = "0.2.0";
         }
 
-        internal static new ManualLogSource Log;
+        internal static ManualLogSource Log = null!;
 
         private void Awake()
         {
-            ModListHashChecker.instance = this;
-            ModListHashChecker.Log = base.Logger;
-            ModListHashChecker.Log.LogInfo((object)"ModListHashChecker loaded with version 0.1.2!");
-            ConfigManager.Init(Config);
+            instance = this;
+            Log = base.Logger;
+            Log.LogInfo($"{PluginInfo.PLUGIN_NAME} loaded with version {PluginInfo.PLUGIN_VERSION}!");
+            ConfigManager.Init(this.Config);
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         }
 

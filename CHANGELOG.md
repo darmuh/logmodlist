@@ -1,5 +1,12 @@
 # Modlist Hash Checker CHANGELOG
 
+## 0.2.0
+- Project cleanup
+- Fixed some issues caused by hijacking the main menu notification game object
+	- Now creates a separate game object specifically for our warning.
+- Added chat message on load of level to display current modlist hash (per request)
+	- Can be disabled via config item ``DisplayHashOnLevelLoad``
+
 ## 0.1.2
 - Added new warning message for blank ExpectedModListHash configuration option.
 - Refactored message handling code for re-use.
