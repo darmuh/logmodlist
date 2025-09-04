@@ -1,5 +1,12 @@
 # Modlist Hash Checker CHANGELOG
 
+## 0.2.1
+- Some more project cleanup, stopped using gamelibs since it's a few versions behind
+- Changed ``DisplayHashOnLevelLoad`` behavior to now have two different options for displaying player hash.
+	- This is set via ``ChatHashMessageToAll`` which has the following results:
+		- When enabled, your hash along with your username will be sent as a server message to all players in the lobby.
+		- When disabled, your hash will be displayed in chat locally and not sent to any other players.
+
 ## 0.2.0
 - Project cleanup
 - Fixed some issues caused by hijacking the main menu notification game object

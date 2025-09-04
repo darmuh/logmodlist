@@ -17,6 +17,7 @@ namespace ModListHashChecker
         public static ConfigEntry<string> NoHashRightButtonText { get; private set; } = null!;
         public static ConfigEntry<string> NoHashLeftButtonText { get; private set; } = null!;
         public static ConfigEntry<bool> DisplayHashOnLevelLoad { get; private set; } = null!;
+        public static ConfigEntry<bool> ChatHashMessageToAll { get; private set; } = null!;
 
         internal static void Init(ConfigFile config)
         {
@@ -33,7 +34,8 @@ namespace ModListHashChecker
             WarningButtonIgnoreText = config.Bind("Menu Warning", "WarningButtonIgnoreText", "Okay", "Button text for ignoring the Hash Mismatch Menu Warning Message");
             WarningButtonResetText = config.Bind("Menu Warning", "WarningButtonResetText", "Reset", "Button text for reseting ExpectedModListHash to the detected hash in Hash Mismatch Menu Warning Message");
 
-            DisplayHashOnLevelLoad = config.Bind<bool>("General", "DisplayHashOnLevelLoad", true, "When enabled, will display the modlist hash in the chat on level load.");
+            DisplayHashOnLevelLoad = config.Bind("General", "DisplayHashOnLevelLoad", true, "When enabled, will display the modlist hash in the chat on level load.");
+            ChatHashMessageToAll = config.Bind("General", "ChatHashMessageToAll", false, "If DisplayHashOnLevelLoad is enabled, this will determine if your chat message is sent to all players (true) or just displayed for the local client (false)");
         }
 
     }

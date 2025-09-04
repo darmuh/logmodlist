@@ -30,8 +30,11 @@ internal class GamePatching
         {
             if(HUDManager.Instance == null || !ConfigManager.DisplayHashOnLevelLoad.Value)
                 return;
-            
-            HUDManager.Instance.AddTextToChatOnServer($"ModListHash: {HashGeneration.GeneratedHash}");
+
+            if (ConfigManager.ChatHashMessageToAll.Value)
+                HUDManager.Instance.AddTextToChatOnServer($"{StartOfRound.Instance.localPlayerController.playerUsername} ModListHash: {HashGeneration.GeneratedHash}");
+            else
+                HUDManager.Instance.AddChatMessage($"Local ModListHash: {HashGeneration.GeneratedHash}", "", -1, true);
         }
     }
 
